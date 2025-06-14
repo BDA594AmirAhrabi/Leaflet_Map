@@ -24,7 +24,7 @@
   <script src="college.js"></script>
 
   <script>
-    // ✅ Mapbox info with YOUR token
+  
     var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                  '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                  'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
@@ -45,14 +45,12 @@
       zoomOffset: -1
     });
 
-    // ✅ Initialize map on San Diego
     var map = L.map('map', {
       center: [32.7757, -117.0711],
       zoom: 12,
       layers: [grayscale]
     });
 
-    // ✅ Add college points as circles with popups
     var collegeCircles = L.layerGroup();
 
     for (var i = 0; i < collegeData.length; i++) {
