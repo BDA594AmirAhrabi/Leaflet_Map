@@ -1,72 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EX3_1_Line_Single</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
-  <style>
-    #map {
-      width: 1200px;
-      height: 1000px;
-    }
-  </style>
+    <title>Baltimore Map with a Single Line</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Leaflet CSS is loaded from the internet (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <style>
+        html, body {
+            height: 100%; margin: 0;
+        }
+        #map {
+            width: 100%; height: 100%;
+        }
+    </style>
 </head>
 <body>
-  <div id="map"></div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <!-- Camera data -->
-  <script src="camera.js"></script>
+<div id="map"></div>
 
-  <script>
-    var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+<!-- Leaflet JS is loaded from the internet (CDN) -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-    var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
-
-    var grayscale = L.tileLayer(mbUrl, {
-      id: 'mapbox/light-v10',
-      attribution: mbAttr,
-      tileSize: 512,
-      zoomOffset: -1
-    });
-
-    var map = L.map('map', {
-      center: [39.30, -76.609],
-      zoom: 13,
-      layers: [grayscale]
-    });
-
-    var dots = new L.LayerGroup();
-    for (var i = 0; i < data.length; i++) {
-      L.circle([data[i][0], data[i][1]], {
-        radius: 40,
-        color: 'blue',
-        fillColor: 'blue',
-        weight: 1,
-        fillOpacity: 0.3
-      }).addTo(dots);
-    }
-    dots.addTo(map);
-
-    var path_points = [
-      [39.30, -76.609],  // Start
-      [39.32, -76.615]   // End
+<script>
+    // Embedded camera data to show the points on the map
+    var cameraData = [
+        [39.290996,-76.621074,1],[39.29048797,-76.62366514,1],[39.289324,-76.620985,1],
+        [39.288678,-76.620948,1],[39.287528,-76.620854,1],[39.285245,-76.620675,1],
+        [39.286257,-76.622129,1],[39.287415,-76.623616,1],[39.289222,-76.623695,1],
+        [39.290333,-76.623777,1],[39.291377,-76.623837,1],[39.29037,-76.622411,1],
+        // A small sample of camera points are included. More could be added.
+        [39.28964536,-76.62415924,1],[39.286315,-76.619369,1],[39.285302,-76.619283,1]
     ];
 
-    var line = L.polyline(path_points, {
-      color: 'red',
-      weight: 4,
-      opacity: 0.7
-    }).addTo(map);
+    // Define tile layer using your Mapbox token
+    var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://mapbox.com">Mapbox</a>';
+    var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
+    var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10', attribution: mbAttr});
 
-    map.fitBounds(line.getBounds());
-  </script>
+    // Initialize the map, centered on Baltimore
+    var map = L.map('map', {
+        center: [39.29, -76.61],
+        zoom: 12,
+        layers: [grayscale]
+    });
+
+    // Add camera points to the map as small circles
+    var dots = L.layerGroup();
+    for (var i = 0; i < cameraData.length; i++) {
+        var point = cameraData[i];
+        L.circle([point[0], point[1]], 40, {color: 'red', fillColor: 'red', weight: 1, fillOpacity: 0.5}).addTo(dots);
+    }
+    map.addLayer(dots);
+
+    // --- Draw a Single Line ---
+    // This section corresponds to the instructions on page 15.
+    
+    // 1. Define the coordinates for the start and end points of the line.
+    var path_points = [
+        [39.27, -76.67], // Starting point
+        [39.35, -76.53]  // Ending point
+    ];
+
+    // 2. Create a polyline from the points and add it to the map.
+    var polyline = L.polyline(path_points, {color: 'blue'}).addTo(map);
+
+    // 3. (Optional) Zoom the map to fit the line
+    map.fitBounds(polyline.getBounds());
+
+</script>
+
 </body>
 </html>

@@ -13,7 +13,7 @@
 	    var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 				'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 				'Imagery © <a href="https://mapbox.com">Mapbox</a>',
-				mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
+			mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=YOUR_MAPBOX_ACCESS_TOKEN';
 
 	    var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10', attribution: mbAttr}),
 		    streets  = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', attribution: mbAttr});

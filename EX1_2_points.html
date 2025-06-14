@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Denver Area Points</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+	// Define grayscale and streets tile layers with your Mapbox token
+	var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://mapbox.com">Mapbox</a>';
+	var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
+
+	var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10', attribution: mbAttr});
+	var streets = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', attribution: mbAttr});
+
+	// Create a layer group for the cities 
+	var cities = new L.LayerGroup();
+
+	// Add markers for each city to the 'cities' layer 
+	L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities);
+	L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities);
+	L.marker([39.73, -104.81]).bindPopup('This is Aurora, CO.').addTo(cities);
+	L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
+
+	// Initialize the map, centered on Denver 
+	var map = L.map('map', {
+		center: [39.74, -104.99],
+		zoom: 10,
+		layers: [grayscale, cities] // Add cities layer to the map by default 
+	});
+
+	// Define base layers and overlay layers for the control
+	var baseLayers = {
+		"Grayscale": grayscale,
+		"Streets": streets
+	};
+
+	var overlays = {
+		"Cities": cities // Add cities to the layer control 
+	};
+
+	// Add the layer control to the map 
+	L.control.layers(baseLayers, overlays).addTo(map);
+
+</script>
+
+</body>
+</html>

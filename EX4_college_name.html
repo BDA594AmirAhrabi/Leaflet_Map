@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Layers Control Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="screen.css" />
+</head>
+<body>
+    <div id="map" style="width: 1200px; height: 1200px"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script type="text/javascript" src="college.js"></script>
+    <script type="text/javascript" src="freeway.js"></script>
+    
+    <script>
+        var map = L.map('map', {
+            center: [32.89457891, -117.09709167],
+            zoom: 11
+        });
+
+        var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://mapbox.com">Mapbox</a>',
+        mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=YOUR_MAPBOX_ACCESS_TOKEN';
+
+        var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10', attribution: mbAttr}),
+            streets = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', attribution: mbAttr});
+
+        map.addLayer(grayscale);
+
+        var dots = L.markerClusterGroup();
+        for (var i = 0; i < data.length; i++) {
+            var point = data[i];
+            L.marker([point[0], point[1]]).bindPopup(point[3]).addTo(dots);
+        }                
+        map.addLayer(dots);    
+        
+        // Freeway
+        var latlngs = [];
+        for (var i = 0; i < freeway.features.length; i++) {
+            var feature = freeway.features[i];
+            latlngs.push(feature.geometry.coordinates.map(coord => L.latLng(coord[1], coord[0])));
+        }
+        var freewayLayer = L.polyline(latlngs, {
+            color: 'orange',
+            weight: 5
+        });
+        //map.addLayer(freewayLayer); // Uncomment this line to add the layer
+        
+        var overlays = {
+            "Colleges": dots,
+            "Freeway": freewayLayer
+        };
+
+        var baseLayers = {
+            "Grayscale": grayscale,
+            "Streets": streets
+        };
+
+        L.control.layers(baseLayers, overlays).addTo(map);
+    </script>
+</body>
+</html>

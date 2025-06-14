@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Baltimore Map with Multiple Lines</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Leaflet CSS is loaded from the internet (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <style>
+        html, body {
+            height: 100%; margin: 0;
+        }
+        #map {
+            width: 100%; height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS is loaded from the internet (CDN) -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+    // --- Sample Data (Embedded) ---
+
+    // Sample camera data to show points on the map
+    var cameraData = [
+        [39.290996,-76.621074,1],[39.29048797,-76.62366514,1],[39.289324,-76.620985,1],
+        [39.288678,-76.620948,1],[39.287528,-76.620854,1],[39.285245,-76.620675,1],
+        [39.286257,-76.622129,1],[39.287415,-76.623616,1],[39.289222,-76.623695,1]
+    ];
+
+    // Sample GeoJSON data for orange lines (replaces Routes_6_9m.js)
+    var routes_6_9m_data = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature", "geometry": { "type": "LineString", "coordinates": [ [-76.63, 39.31], [-76.60, 39.29], [-76.62, 39.27] ] }
+      }]
+    };
+
+    // Sample GeoJSON data for green lines (replaces Routes_10_16m.js)
+    var routes_10_16m_data = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature", "geometry": { "type": "LineString", "coordinates": [ [-76.65, 39.33], [-76.58, 39.30] ] }
+      }]
+    };
+
+
+    // --- Map Initialization ---
+
+    // Define tile layer using your Mapbox token
+    var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://mapbox.com">Mapbox</a>';
+    var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
+    var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v10', attribution: mbAttr});
+    var streets = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', attribution: mbAttr});
+
+    // Initialize the map, centered on Baltimore
+    var map = L.map('map', {
+        center: [39.29, -76.61],
+        zoom: 12,
+        layers: [grayscale]
+    });
+
+
+    // --- Layer Creation ---
+
+    // Add camera points to the map
+    var dots = L.layerGroup();
+    for (var i = 0; i < cameraData.length; i++) {
+        var point = cameraData[i];
+        L.circle([point[0], point[1]], 40, {color: 'purple', fillColor: 'purple', weight: 1, fillOpacity: 0.5}).addTo(dots);
+    }
+    
+    // Create layer for orange lines from GeoJSON data
+    var orangeLines = L.geoJSON(routes_6_9m_data, {
+        style: {
+            color: 'orange',
+            weight: 5
+        }
+    });
+
+    // Create layer for green lines from GeoJSON data
+    var greenLines = L.geoJSON(routes_10_16m_data, {
+        style: {
+            color: 'green',
+            weight: 5
+        }
+    });
+
+    // --- Layer Control ---
+
+    // Define base layers
+    var baseLayers = {
+        "Grayscale": grayscale,
+        "Streets": streets
+    };
+
+    // Define overlay layers
+    var overlays = {
+        "Camera Points": dots,
+        "Orange Lines (6-9m)": orangeLines,
+        "Green Lines (10-16m)": greenLines
+    };
+
+    // Add the layer control to the map
+    L.control.layers(baseLayers, overlays).addTo(map);
+    
+    // Add all layers to the map by default
+    dots.addTo(map);
+    orangeLines.addTo(map);
+    greenLines.addTo(map);
+
+</script>
+
+</body>
+</html>

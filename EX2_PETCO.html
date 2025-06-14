@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Petco Park GeoJSON Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Leaflet CSS is loaded from the internet (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <style>
+        html, body {
+            height: 100%; margin: 0;
+        }
+        #map {
+            width: 100%; height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS is loaded from the internet (CDN) -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+    // Initialize the map and set the view to Petco Park
+    // Coordinates and zoom level are set as per the assignment instructions on page 14.
+    var map = L.map('map').setView([32.7077, -117.1570], 17);
+
+    // Define the tile layer using your Mapbox token
+    var mbAttr = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://mapbox.com">Mapbox</a>';
+    var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
+    L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', attribution: mbAttr}).addTo(map);
+
+    // GeoJSON data for a single point at Petco Park.
+    // This replaces the need for the separate 'sample-geojson.js' file.
+    var geojsonFeature = {
+        "type": "Feature",
+        "properties": {
+            "name": "Petco Park",
+            "popupContent": "This is Petco Park!"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [-117.1570, 32.7077] // [Longitude, Latitude] for GeoJSON
+        }
+    };
+    
+    // Custom baseball icon, loaded from the internet.
+    // This replaces the need for the 'baseball-marker.png' file.
+    var baseballIcon = L.icon({
+        iconUrl: 'http://leafletjs.com/examples/geojson/baseball-marker.png',
+        iconSize: [32, 37],
+        iconAnchor: [16, 37],
+        popupAnchor: [0, -28]
+    });
+
+    // Create a GeoJSON layer.
+    // The 'pointToLayer' function is used to apply the custom icon to the point.
+    L.geoJSON(geojsonFeature, {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {icon: baseballIcon});
+        }
+    }).bindPopup(function (layer) {
+        // Bind a popup to show the feature's popupContent property
+        return layer.feature.properties.popupContent;
+    }).addTo(map);
+
+</script>
+
+</body>
+</html>
