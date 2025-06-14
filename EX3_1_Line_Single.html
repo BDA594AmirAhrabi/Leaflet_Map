@@ -24,7 +24,6 @@
   <script src="camera.js"></script>
 
   <script>
-    // ✅ Mapbox info with YOUR token
     var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                  '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                  'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
@@ -44,7 +43,6 @@
       layers: [grayscale]
     });
 
-    // ✅ Add camera points
     var dots = new L.LayerGroup();
     for (var i = 0; i < data.length; i++) {
       L.circle([data[i][0], data[i][1]], {
@@ -57,20 +55,17 @@
     }
     dots.addTo(map);
 
-    // ✅ Define coordinates for the line (example: two points in Baltimore)
     var path_points = [
       [39.30, -76.609],  // Start
       [39.32, -76.615]   // End
     ];
 
-    // ✅ Create the line
     var line = L.polyline(path_points, {
       color: 'red',
       weight: 4,
       opacity: 0.7
     }).addTo(map);
 
-    // ✅ Fit map to the line bounds
     map.fitBounds(line.getBounds());
   </script>
 </body>
