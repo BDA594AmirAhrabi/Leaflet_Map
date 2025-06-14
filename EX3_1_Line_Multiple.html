@@ -27,7 +27,6 @@
   <script src="Routes_10_16m.js"></script>
 
   <script>
-    // ✅ Mapbox info with YOUR token
     var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                  '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                  'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
@@ -47,7 +46,6 @@
       layers: [grayscale]
     });
 
-    // ✅ Camera points
     var dots = new L.LayerGroup();
     for (var i = 0; i < data.length; i++) {
       L.circle([data[i][0], data[i][1]], {
@@ -60,7 +58,6 @@
     }
     dots.addTo(map);
 
-    // ✅ Line layer: 6-9 miles (orange)
     var path_6_9m = L.geoJSON(routes_6_9m, {
       style: {
         color: "orange",
@@ -69,7 +66,6 @@
       }
     }).addTo(map);
 
-    // ✅ Line layer: 10-16 miles (green)
     var path_10_16m = L.geoJSON(routes_10_16m, {
       style: {
         color: "green",
@@ -78,7 +74,6 @@
       }
     }).addTo(map);
 
-    // ✅ Fit map to show all lines and points
     var allLayers = L.featureGroup([dots, path_6_9m, path_10_16m]);
     map.fitBounds(allLayers.getBounds());
   </script>
