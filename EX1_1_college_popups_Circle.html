@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EX1_2_college_popups_circle</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+  <style>
+    #map {
+      width: 1200px;
+      height: 1000px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <!-- College data -->
+  <script src="college.js"></script>
+
+  <script>
+    // ✅ Mapbox info with YOUR token
+    var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+
+    var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmV6YTI3aXNoIiwiYSI6ImNtYnZoMHNibTBxNG4ybHB0OTEzMzBrcnMifQ.maXNCtswl9yCwUzpkeZVeg';
+
+    var grayscale = L.tileLayer(mbUrl, {
+      id: 'mapbox/light-v10',
+      attribution: mbAttr,
+      tileSize: 512,
+      zoomOffset: -1
+    });
+
+    var streets = L.tileLayer(mbUrl, {
+      id: 'mapbox/streets-v11',
+      attribution: mbAttr,
+      tileSize: 512,
+      zoomOffset: -1
+    });
+
+    // ✅ Initialize map on San Diego
+    var map = L.map('map', {
+      center: [32.7757, -117.0711],
+      zoom: 12,
+      layers: [grayscale]
+    });
+
+    // ✅ Add college points as circles with popups
+    var collegeCircles = L.layerGroup();
+
+    for (var i = 0; i < collegeData.length; i++) {
+      var point = collegeData[i];
+      var circle = L.circle([point[0], point[1]], {
+        radius: 200,       // radius in meters
+        color: 'red',
+        fillColor: 'red',
+        fillOpacity: 0.5
+      }).bindPopup(point[2]);  // Use the college name
+      circle.addTo(collegeCircles);
+    }
+
+    collegeCircles.addTo(map);
+
+    var baseLayers = {
+      "Grayscale": grayscale,
+      "Streets": streets
+    };
+
+    var overlays = {
+      "Colleges (Circles)": collegeCircles
+    };
+
+    L.control.layers(baseLayers, overlays).addTo(map);
+  </script>
+</body>
+</html>
